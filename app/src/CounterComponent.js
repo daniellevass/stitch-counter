@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Container, Row, Col, Card, Button, Image, Form} from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faRedo, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faRedo, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons'
 
 class CounterComponent extends Component {
 
@@ -118,7 +118,7 @@ class CounterComponent extends Component {
 
           <Button variant="outline-dark"
                   style={{'marginRight': '10px', 'width': '40px', 'marginLeft': '10px'}}
-                  onClick={this.decreaseCounter1}>-</Button>{'  '}
+                  onClick={this.decreaseCounter1}><FontAwesomeIcon icon={faMinus} /></Button>{'  '}
           {this.state.counter1}
           <Button variant="outline-dark" size="lg"
                   style={{'fontSize': '0.5em', 'marginLeft': '30px', 'width': '70px'}}
@@ -139,7 +139,7 @@ class CounterComponent extends Component {
                 onClick={this.resetCounter2}><FontAwesomeIcon icon={faRedo} /></Button>{'  '}
         <Button variant="outline-dark"
                 style={{'marginRight': '10px', 'width': '40px', 'marginLeft': '10px'}}
-                onClick={this.decreaseCounter2}>-</Button>{'  '}
+                onClick={this.decreaseCounter2}><FontAwesomeIcon icon={faMinus} /></Button>{'  '}
         {this.state.counter2}
         <Button variant="outline-dark" size="lg"
                 style={{'fontSize': '1em', 'marginLeft': '10px', 'width': '60px'}}
