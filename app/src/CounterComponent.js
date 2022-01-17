@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Container, Row, Col, Card, Button, Image, Form} from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faRedo, faPlus } from '@fortawesome/free-solid-svg-icons'
 
 class CounterComponent extends Component {
 
@@ -36,6 +38,12 @@ class CounterComponent extends Component {
     }
   }
 
+  resetCounter1 = () => {
+    this.setState({counter1: 0}, () => {
+        this.saveToStorage()
+    });
+  }
+
   increaseCounter2 = () => {
     var counter2 = this.state.counter2;
     counter2 ++
@@ -53,6 +61,12 @@ class CounterComponent extends Component {
       });
     }
 
+  }
+
+  resetCounter2 = () => {
+    this.setState({counter2: 0}, () => {
+        this.saveToStorage()
+    });
   }
 
   handleNotesChanged = (e) => {
@@ -97,13 +111,18 @@ class CounterComponent extends Component {
 
         <Row>
           <p style={{'fontSize': '5em'}}>
+
           <Button variant="outline-dark"
-                  style={{'marginRight': '30px', 'width': '40px', 'marginLeft': '30px'}}
+                  style={{'width': '40px', 'marginLeft': '10px'}}
+                  onClick={this.resetCounter1}><FontAwesomeIcon icon={faRedo} /></Button>{'  '}
+
+          <Button variant="outline-dark"
+                  style={{'marginRight': '10px', 'width': '40px', 'marginLeft': '10px'}}
                   onClick={this.decreaseCounter1}>-</Button>{'  '}
           {this.state.counter1}
           <Button variant="outline-dark" size="lg"
                   style={{'fontSize': '0.5em', 'marginLeft': '30px', 'width': '70px'}}
-                  onClick={this.increaseCounter1}>+</Button>
+                  onClick={this.increaseCounter1}><FontAwesomeIcon icon={faPlus} /></Button>
           </p>
         </Row>
 
@@ -116,12 +135,15 @@ class CounterComponent extends Component {
 
         <p style={{'fontSize': '2em'}}>
         <Button variant="outline-dark"
-                style={{'fontSize': '1em', 'marginRight': '10px', 'width': '60px'}}
+                style={{'width': '40px', 'marginLeft': '10px', 'marginRight': '10px'}}
+                onClick={this.resetCounter2}><FontAwesomeIcon icon={faRedo} /></Button>{'  '}
+        <Button variant="outline-dark"
+                style={{'marginRight': '10px', 'width': '40px', 'marginLeft': '10px'}}
                 onClick={this.decreaseCounter2}>-</Button>{'  '}
         {this.state.counter2}
         <Button variant="outline-dark" size="lg"
-                style={{'fontSize': '1em', 'marginLeft': '30px', 'width': '60px'}}
-                onClick={this.increaseCounter2}>+</Button>{'  '}
+                style={{'fontSize': '1em', 'marginLeft': '10px', 'width': '60px'}}
+                onClick={this.increaseCounter2}><FontAwesomeIcon icon={faPlus} /></Button>{'  '}
 
 
         </p>
