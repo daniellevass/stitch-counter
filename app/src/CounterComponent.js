@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Container, Row, Col, Card, Button, Image, Form} from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Image, Form, Modal, ToggleButton, ToggleButtonGroup} from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faRedo, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons'
+import { faRedo, faPlus, faMinus, faMagic, faLongArrowAltLeft, faMitten, faTshirt, faSocks } from '@fortawesome/free-solid-svg-icons'
 
 class CounterComponent extends Component {
 
@@ -10,21 +10,22 @@ class CounterComponent extends Component {
       this.props = props;
 
       this.state = {
-        counter1: 0,
-        counter2: 0,
-        notes: ""
+        counter1: this.props.project.counter1,
+        counter2: this.props.project.counter2,
+        notes: this.props.project.notes,
+        title: this.props.project.title,
+        icon: this.props.project.icon,
+        showModal: false,
+        tempTitle: "",
+        tempIcon: ""
       }
-  }
-
-  componentDidMount() {
-    this.readFromStorage();
   }
 
   increaseCounter1 = () => {
     var counter1 = this.state.counter1;
     counter1 ++
     this.setState({counter1: counter1}, () => {
-        this.saveToStorage()
+        this.update()
     });
   }
 
@@ -33,14 +34,14 @@ class CounterComponent extends Component {
     if (counter1 > 0) {
       counter1 --
       this.setState({counter1: counter1}, () => {
-          this.saveToStorage()
+          this.update()
       });
     }
   }
 
   resetCounter1 = () => {
     this.setState({counter1: 0}, () => {
-        this.saveToStorage()
+        this.update()
     });
   }
 
@@ -48,7 +49,7 @@ class CounterComponent extends Component {
     var counter2 = this.state.counter2;
     counter2 ++
     this.setState({counter2: counter2}, () => {
-        this.saveToStorage()
+        this.update()
     });
   }
 
@@ -57,7 +58,7 @@ class CounterComponent extends Component {
     if (counter2 > 0) {
       counter2 --
       this.setState({counter2: counter2}, () => {
-          this.saveToStorage()
+          this.update()
       });
     }
 
@@ -65,49 +66,89 @@ class CounterComponent extends Component {
 
   resetCounter2 = () => {
     this.setState({counter2: 0}, () => {
-        this.saveToStorage()
+        this.update()
     });
   }
 
   handleNotesChanged = (e) => {
       this.setState({notes: e.target.value}, () => {
-          this.saveToStorage()
+          this.update()
       });
-
   }
 
-  saveToStorage = () => {
-    let item = {
+  handleTitleChanged = (e) => {
+    this.setState({tempTitle: e.target.value})
+  }
+
+  handleIconUpdated = (icon) => {
+    console.log(icon)
+    this.setState({tempIcon: icon})
+  }
+
+  update = () => {
+    let project = {
       counter1: this.state.counter1,
       counter2: this.state.counter2,
-      notes: this.state.notes
+      notes: this.state.notes,
+      title: this.state.title,
+      icon: this.state.icon
     }
-    localStorage.setItem("counter_component_1", JSON.stringify(item) );
+    this.props.onItemUpdated(project)
   }
 
-  readFromStorage = () => {
-    let json = localStorage.getItem("counter_component_1");
-    let item = JSON.parse(json);
-
-    if (item != null) {
-      this.setState({
-        counter1: item.counter1,
-        counter2: item.counter2,
-        notes: item.notes
-      })
-    }
+  backPressed = () => {
+    this.props.onBackPressed()
   }
+
+ handleModalCancel = () => {
+   this.setState({showModal: false})
+ }
+
+ handleModalSave = () => {
+   let title = this.state.tempTitle
+   let icon = this.state.tempIcon
+   this.setState({showModal: false, title: title, icon: icon}, () => {
+       this.update()
+   });
+ }
+
+ handleShow = () => {
+   let title = this.state.title
+   let icon = this.state.icon
+   this.setState({showModal: true, tempTitle: title, tempIcon: icon})
+}
 
   render() {
+    let icon = faMagic
+
+    if (this.state.icon === "faMitten") {
+      icon = faMitten
+    } else if (this.state.icon === "faSocks") {
+      icon = faSocks
+    } else if (this.state.icon === "faTshirt") {
+      icon = faTshirt
+    }
+
+
   return (
     <Container style={{'padding': "0px"}}>
       <Row style={{'margin': "0px"}}>
+
+      <Button
+        variant="dark"
+        onClick={this.backPressed}>
+          <FontAwesomeIcon icon={faLongArrowAltLeft} /> back
+      </Button>
 
       <Row style={{'paddingTop':'20px',
                    'paddingBottom': '10px',
                    'background': '#FFCE54',
                    'margin': "0px"}}>
-        <h1>Sweater</h1>
+
+        <div className="d-grid gap-2">
+          <Button variant="outline-dark" onClick={this.handleShow} size="lg">
+          <FontAwesomeIcon icon={icon}/> {this.state.title}</Button>{' '}
+        </div>
 
         <Row>
           <p style={{'fontSize': '5em'}}>
@@ -164,6 +205,51 @@ class CounterComponent extends Component {
       </Row>
 
       </Row>
+
+      <Modal show={this.state.showModal} onHide={this.handleModalCancel}>
+        <Modal.Header closeButton>
+          <Modal.Title>Modal heading</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+
+          <Form.Group className="mb-3" controlId="formBasicEmail">
+            <Form.Control type="text" onChange={this.handleTitleChanged}
+            placeholder="title" value={this.state.tempTitle}/>
+          </Form.Group>
+
+          <br/>
+
+          <ToggleButtonGroup
+            type="radio"
+            name="options"
+            onChange={this.handleIconUpdated}
+            defaultValue={this.state.tempIcon}
+            value={this.state.tempIcon}>
+
+            <ToggleButton id="tbg-radio-1" variant="outline-primary" value={"faMagic"}>
+              <FontAwesomeIcon icon={faMagic} />
+            </ToggleButton>
+            <ToggleButton id="tbg-radio-2" variant="outline-primary" value={"faMitten"}>
+              <FontAwesomeIcon icon={faMitten} />
+            </ToggleButton>
+            <ToggleButton id="tbg-radio-3" variant="outline-primary" value={"faSocks"}>
+              <FontAwesomeIcon icon={faSocks} />
+            </ToggleButton>
+            <ToggleButton id="tbg-radio-4" variant="outline-primary" value={"faTshirt"}>
+              <FontAwesomeIcon icon={faTshirt} />
+            </ToggleButton>
+          </ToggleButtonGroup>
+
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={this.handleModalCancel}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={this.handleModalSave}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
     </Container>
   )}

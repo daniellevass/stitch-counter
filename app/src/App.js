@@ -1,10 +1,11 @@
 import './App.css';
-import CounterComponent from './CounterComponent.js'
+import Application from './Application.js'
 
 function App() {
+
   return (
     <div className="App">
-      <CounterComponent />
+      <Application />
     </div>
   );
 }
