@@ -197,7 +197,7 @@ class CounterComponent extends Component {
                    <Form>
                      <Form.Group className="mb-3" >
                        <Form.Label>Notes</Form.Label>
-                       <Form.Control as="textarea" rows={3} onChange={this.handleNotesChanged}
+                       <Form.Control as="textarea" rows={10} onChange={this.handleNotesChanged}
                        value={this.state.notes} />
                      </Form.Group>
                    </Form>
